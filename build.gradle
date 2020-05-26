@@ -6,6 +6,7 @@ buildscript {
         maven { url "https://repo.spring.io/plugins-release" }
     }
     dependencies {
+        classpath "gradle.plugin.com.heroku.sdk:heroku-gradle:1.0.4"
         //jhipster-needle-gradle-buildscript-dependency - JHipster will add additional gradle build script plugins here
     }
 }
@@ -41,6 +42,7 @@ assert System.properties["java.specification.version"] == "1.8" || "11" || "12" 
 apply from: "gradle/docker.gradle"
 apply from: "gradle/sonar.gradle"
 apply from: "gradle/swagger.gradle"
+apply from: 'gradle/heroku.gradle'
 //jhipster-needle-gradle-apply-from - JHipster will add additional gradle scripts to be applied here
 
 if (project.hasProperty("prod") || project.hasProperty("gae")) {
@@ -89,49 +91,49 @@ springBoot {
     mainClassName = "jh02.Jh02App"
 }
 
-test {
-    useJUnitPlatform()
-    exclude "**/*IT*", "**/*IntTest*"
+// test {
+//     useJUnitPlatform()
+//     exclude "**/*IT*", "**/*IntTest*"
 
-    testLogging {
-        events 'FAILED', 'SKIPPED'
-    }
-    // uncomment if the tests reports are not generated
-    // see https://github.com/jhipster/generator-jhipster/pull/2771 and https://github.com/jhipster/generator-jhipster/pull/4484
-    // ignoreFailures true
-    reports.html.enabled = false
-}
+//     testLogging {
+//         events 'FAILED', 'SKIPPED'
+//     }
+//     // uncomment if the tests reports are not generated
+//     // see https://github.com/jhipster/generator-jhipster/pull/2771 and https://github.com/jhipster/generator-jhipster/pull/4484
+//     // ignoreFailures true
+//     reports.html.enabled = false
+// }
 
-task integrationTest(type: Test) {
-    useJUnitPlatform()
-    description = "Execute integration tests."
-    group = "verification"
-    include "**/*IT*", "**/*IntTest*"
+// task integrationTest(type: Test) {
+//     useJUnitPlatform()
+//     description = "Execute integration tests."
+//     group = "verification"
+//     include "**/*IT*", "**/*IntTest*"
 
-    testLogging {
-        events 'FAILED', 'SKIPPED'
-    }
+//     testLogging {
+//         events 'FAILED', 'SKIPPED'
+//     }
 
-    if (project.hasProperty('testcontainers')) {
-        environment 'spring.profiles.active', 'testcontainers'
-    }
+//     if (project.hasProperty('testcontainers')) {
+//         environment 'spring.profiles.active', 'testcontainers'
+//     }
 
-    // uncomment if the tests reports are not generated
-    // see https://github.com/jhipster/generator-jhipster/pull/2771 and https://github.com/jhipster/generator-jhipster/pull/4484
-    // ignoreFailures true
-    reports.html.enabled = false
-}
+//     // uncomment if the tests reports are not generated
+//     // see https://github.com/jhipster/generator-jhipster/pull/2771 and https://github.com/jhipster/generator-jhipster/pull/4484
+//     // ignoreFailures true
+//     reports.html.enabled = false
+// }
 
-check.dependsOn integrationTest
-task testReport(type: TestReport) {
-    destinationDir = file("$buildDir/reports/tests")
-    reportOn test
-}
+// check.dependsOn integrationTest
+// task testReport(type: TestReport) {
+//     destinationDir = file("$buildDir/reports/tests")
+//     reportOn test
+// }
 
-task integrationTestReport(type: TestReport) {
-    destinationDir = file("$buildDir/reports/tests")
-    reportOn integrationTest
-}
+// task integrationTestReport(type: TestReport) {
+//     destinationDir = file("$buildDir/reports/tests")
+//     reportOn integrationTest
+// }
 
 if (!project.hasProperty("runList")) {
     project.ext.runList = "main"
@@ -282,6 +284,8 @@ dependencies {
     testRuntimeOnly "com.tngtech.archunit:archunit-junit5-engine:${archunit_junit5_version}"
     testImplementation "com.h2database:h2"
     liquibaseRuntime "com.h2database:h2"
+    compile "org.springframework.cloud:spring-cloud-localconfig-connector"
+    compile "org.springframework.cloud:spring-cloud-heroku-connector"
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
 }
 
