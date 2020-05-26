@@ -36,7 +36,9 @@
     "dtoSuffix": "DTO",
     "otherModules": [],
     "blueprints": [],
-    "prettierJava": true
+    "prettierJava": true,
+    "herokuAppName": "jh-02",
+    "herokuDeployType": "git"
   },
   "git-provider": "GitHub",
   "git-company": "scowo-team",
